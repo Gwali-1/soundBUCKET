@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from sqlalchemy import DateTime
+from sqlalchemy import Column, DateTime
 
 
 
@@ -10,7 +10,6 @@ class ProfileBase(BaseModel):
     bio: str | None = None
 
 
-
 class Profile(ProfileBase):
     contributions: int
     playlist_exports: int
@@ -18,12 +17,13 @@ class Profile(ProfileBase):
     date_joined: DateTime
 
 
-
 class ProfileCreate(ProfileBase):
     pass 
 
 
 
+
+####################### song models 
 class SongBase(BaseModel):
     title: str 
     song_id: str
@@ -37,27 +37,47 @@ class SongBase(BaseModel):
 class Song(SongBase):
     id: int
 
+
 class SongCreate(SongBase):
-    song_id: str
-    artist_name
+    user_id: int
+    bucket_id: int 
+
+
+
+############################# bucket models
 class BucketBase(BaseModel):
-    pass
-
-
-class UserBase(BaseModel):
-    pass
-
-class User(BaseModel):
-    id: int
-    username: str 
-    email: str 
-    profile: list[Profile]
-    songs: list[Songs] 
+    name: str
+    description: str
+    cover_art_url: str
  
 
-class UserCreate(BaseModel):
-    username: str
+class Bucket(BucketBase):
+    id: int
+    number_of_tracks: int
+    upvotes: int
+    songs: list[Song]
+
+
+class BucketCreate(BucketBase):
+    pass
+
+
+
+
+
+####################### user models
+class UserBase(BaseModel):
+    username: str 
     email: str 
+    
+
+class User(UserBase):
+    id: int
+    profile: list[Profile]
+    songs: list[Song]
+ 
+
+class UserCreate(UserBase):
     password: str 
 
 
