@@ -1,4 +1,3 @@
-from enum import unique
 from .database import Base
 from sqlalchemy import ForeignKeyConstraint, String, Integer, Boolean, Column, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
@@ -19,12 +18,15 @@ class User(Base):
 class Profile(Base):
     __tablename__ = "profile"
     id = Column(Integer, primary_key=True, index=True)
-    contributions = Column(Integer)
-    playlist_exports = Column(Integer)
+    contributions = Column(Integer, default=0)
+    playlist_exports = Column(Integer, default=0)
     created_buckets = Column(Integer)
-    music_tatse = Column(Integer)
+    music_taste_upvote = Column(Integer, default=0)
     sportify_profile = Column(String)
-    owner_id = Column(Integer, ForeignKey("users.id"))
+    profile_pic = Column(String)
+    bio = Column(String)
+    date_joined = Column(DateTime)
+    owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
 
     
@@ -52,9 +54,10 @@ class Bucket(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True , index=True)
     description = Column(String)
-    nuimber_of_tracks = Column(Integer)
+    number_of_tracks = Column(Integer)
     created_at = Column(DateTime,index=True, default=datetime.now)
     cover_art_url = Column(String)
+    upvotes = Column(Integer, default=0)
     songs = relationship("Songs")
     
 
