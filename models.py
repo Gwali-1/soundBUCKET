@@ -1,4 +1,3 @@
-from sqlalchemy.sql import column
 from .database import Base
 from sqlalchemy import ForeignKeyConstraint, String, Integer, Boolean, Column, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
@@ -10,8 +9,7 @@ class User(Base):
     username = Column(String)
     email = Column(String, index=True)
     password = Column(String)
-    profile = relationship("Profile", back_populates="user")
-    buckets = relationship("UserBucket", back_populates="user")
+    profile = relationship("Profile")
     songs = relationship("Songs")
     
 
@@ -24,6 +22,8 @@ class Profile(Base):
     created_buckets = Column(Integer)
     music_tatse = Column(Integer)
     sportify_profile = Column(String)
+    owner_id = Column(Integer, ForeignKey("users.id"))
+
 
     
 
@@ -31,11 +31,16 @@ class Songs(Base):
     __tablename__ = "songs"
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String)
+    song_id = Column(String, index=True)
     artist_name = Column(String)
     cover_art_url = Column(String)
     preview_url = Column(String)
     song_duration = Column(String)
     external_url = Column(String)
+    added_at = Column(DateTime, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    bucket_id = Column(Integer, ForeignKey("bucket.id"))
+
     
 
 
@@ -45,24 +50,13 @@ class Bucket(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
     description = Column(String)
-    number_of_tracks = Column(Integer)
+    nuimber_of_tracks = Column(Integer)
     created_at = Column(DateTime, index=True)
     cover_art_url = Column(String)
-    song = relationship("Songs")
+    songs = relationship("Songs")
+    
 
 
-
-class UserBucket(Base):
-    __tablename__ = "bucket"
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String)
-    description = Column(String)
-    number_of_tracks = Column(Integer)
-    created_at = Column(DateTime, index=True)
-    cover_art_url = Column(String)
-    owner_id = Column(Integer, ForeignKey("users.id"))
-    song_id= Column(Integer, ForeignKey("songs.id"))
-    songs = relationship("Songs")<Right>
  
 
 
