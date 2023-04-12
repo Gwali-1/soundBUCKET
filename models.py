@@ -1,6 +1,8 @@
+from enum import unique
 from .database import Base
 from sqlalchemy import ForeignKeyConstraint, String, Integer, Boolean, Column, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
+from datetime import datetime
 
 
 class User(Base):
@@ -37,7 +39,7 @@ class Songs(Base):
     preview_url = Column(String)
     song_duration = Column(String)
     external_url = Column(String)
-    added_at = Column(DateTime, index=True)
+    added_at = Column(DateTime, index=True, default=datetime.now)
     user_id = Column(Integer, ForeignKey("users.id"))
     bucket_id = Column(Integer, ForeignKey("bucket.id"))
 
@@ -48,10 +50,10 @@ class Songs(Base):
 class Bucket(Base):
     __tablename__ = "bucket"
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String)
+    name = Column(String, unique=True , index=True)
     description = Column(String)
     nuimber_of_tracks = Column(Integer)
-    created_at = Column(DateTime, index=True)
+    created_at = Column(DateTime,index=True, default=datetime.now)
     cover_art_url = Column(String)
     songs = relationship("Songs")
     
