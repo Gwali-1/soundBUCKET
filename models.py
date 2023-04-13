@@ -1,8 +1,9 @@
-from .database import Base
+import async_database
 from sqlalchemy import ForeignKeyConstraint, String, Integer, Boolean, Column, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
+Base = async_database.Base
 
 class User(Base):
     __tablename__ = "users"
@@ -12,7 +13,6 @@ class User(Base):
     password = Column(String)
     profile = relationship("Profile")
     songs = relationship("Songs")
-    
 
 
 class Profile(Base):
@@ -22,7 +22,7 @@ class Profile(Base):
     playlist_exports = Column(Integer, default=0)
     music_taste_upvote = Column(Integer, default=0)
     sportify_profile = Column(String)
-    twitter_profile = Column()
+    twitter_profile = Column(String)
     profile_pic = Column(String)
     bio = Column(String)
     date_joined = Column(DateTime)

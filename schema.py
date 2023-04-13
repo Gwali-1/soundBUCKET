@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from sqlalchemy import Column, DateTime
 
 
-
+############################ profile models 
 class ProfileBase(BaseModel):
     sportify_profile: str | None = None
     twitter_profile: str | None = None
@@ -22,7 +22,6 @@ class ProfileCreate(ProfileBase):
 
 
 
-
 ####################### song models 
 class SongBase(BaseModel):
     title: str 
@@ -36,6 +35,10 @@ class SongBase(BaseModel):
 
 class Song(SongBase):
     id: int
+
+    class Config:
+        orm_mode=True 
+
 
 
 class SongCreate(SongBase):
@@ -57,11 +60,12 @@ class Bucket(BucketBase):
     upvotes: int
     songs: list[Song]
 
+    class Config:
+        orm_mode=True
+
 
 class BucketCreate(BucketBase):
     pass
-
-
 
 
 
