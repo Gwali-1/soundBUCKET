@@ -3,7 +3,7 @@ from passlib.context import CryptContext
 from  datetime import timedelta, datetime
 from decouple import config
 from jose import jwt 
-
+from .async_database import SessionLocal
 
 
 SECRET_KEY = config("SECRET_KEY")
@@ -26,14 +26,19 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-
-
-
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
 
-
-
 def hashed_password(password):
     return pwd_context.hash(password)
+
+
+
+###dependecies
+async def get_db_session():
+    async with SessionLocal() as db:
+        try:
+            yield db
+        finally:
+            await db.close()
