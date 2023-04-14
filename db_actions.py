@@ -2,6 +2,7 @@ from os import name
 from sqlalchemy import except_, extract
 from . import models , schema
 from sqlalchemy.orm import Session
+from .dependecies import hash_password
 
 
 #add create account
@@ -10,7 +11,7 @@ async def create_account(db:Session, user:schema.UserCreate):
     username = user.username
     password = user.password
     email= user.email 
-    new_user = models.User(username=username,email=email, password=password)
+    new_user = models.User(username=username,email=email, password=hash_password(password))
     db.add(new_user)
     try:
         await db.commit()
@@ -28,9 +29,8 @@ async def login(db:Session, user:schema.UserLogin):
     password = user.password 
     user = await db.query(models.User).filter(models.User.username = username).first()
     if user:
-        if  hash_passwaord(password) == user.password:
-                return user 
-
+        if hash_password(password) == user.password:
+             return user 
     return False
 
     
@@ -67,12 +67,11 @@ async def create_bucket(db:Session, bucket:schema.Bucket):
 
 #add create/edit profile
 async def edit_profile(db:Session, profile:schema.Profile, user_id:int):
-    new_profile = models.Profile(**profile.dict())
-    db.add(new_profile)
+    profile = db.query(models.Profile).filter(models.Profile.owner_id == user_id).update(**profile.dict())                                             
     try:
         await db.commit()
-        await db.refresh(new_profile)
-        return new_profile
+        await db.refresh(profile)
+        return profile
     except Exception as e:
         print(e)
         db.rollback()
@@ -83,18 +82,27 @@ async def edit_profile(db:Session, profile:schema.Profile, user_id:int):
 #add 
 async def get_bucket_songs_by_name(db:Session, bucket_name:str):
     bucket = await db.query(models.Bucket).filter(models.Bucket.name == bucket_name).first()
-    if bucket:
-        return bucket
-    return False
+    if not bucket:
+        return []
+    return bucket 
+
+
+
 
 async def get_bucket_songs_by_month(db:Session, bucket_month:str):
-    bucket = await db.query(models.Bucket).filter(extract("month"), models.Bucket.created_at 
-                                                  == bucket_month).first()
-    if bucket:
-        return bucket
-    return []
+    bucket = await db.query(models.Bucket).filter(extract("month", models.Bucket.created_at) == bucket_month).first()
+    if not bucket:
+        return []
+    return bucket 
 
 
+
+
+async def get_user(db:Session, user_id:int):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        return []
+    return user 
     
 
 
