@@ -2,7 +2,7 @@ from os import name
 from sqlalchemy import except_, extract
 from . import models , schema
 from sqlalchemy.orm import Session
-from .dependecies import hash_password
+from .dependencies  import hash_password
 
 
 #add create account
