@@ -43,7 +43,7 @@ class Song(SongBase):
 
 class SongCreate(SongBase):
     user_id: int
-    bucket_id: int 
+    bucket_name: str 
 
 
 
@@ -83,6 +83,12 @@ class User(UserBase):
 
 class UserCreate(UserBase):
     password: str 
+
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
+
 
 
 
