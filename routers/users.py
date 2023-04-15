@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
-from ..dependencies import get_db_session, create_access_token
+from ..dependencies import get_db_session, create_access_token,auth_token
 from .. import schema, db_actions, models
 from sqlalchemy.orm import Session
 from typing import Annotated
 from fastapi.security import OAuth2PasswordRequestForm
 from datetime import timedelta
-
+from fastapi.responses import JSONResponse
 
 router = APIRouter(
     prefix="/user",
@@ -52,6 +52,14 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db:S
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.post("/authenticate_token"):
-    pass 
+
+
+
+@router.post("/authenticate_token")
+async def authenticate_token(check:bool = Depends(auth_token)):
+    if check:
+        return JSONResponse(content={"message":"valid"},status_code=200)
+    return JSONResponse(content={"message":"invalid"},status_code=401)
+
+
 
