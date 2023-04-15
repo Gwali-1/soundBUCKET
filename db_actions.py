@@ -1,5 +1,4 @@
-from os import name
-from sqlalchemy import except_, extract
+from sqlalchemy import  extract
 from . import models , schema
 from sqlalchemy.orm import Session
 from .dependencies  import hash_password
@@ -9,7 +8,7 @@ from .dependencies  import hash_password
 async def create_account(db:Session, user:schema.UserCreate):
     username = user.username
     password = user.password
-    email= user.email 
+    email= user.email
     new_user = models.User(username=username,email=email, password=hash_password(password))
     db.add(new_user)
     try:
@@ -26,10 +25,10 @@ async def create_account(db:Session, user:schema.UserCreate):
 async def login(db:Session, user:schema.UserLogin):
     username = user.username
     password = user.password 
-    user = await db.query(models.User).filter(models.User.username = username).first()
-    if user:
+    existing_user = await db.query(models.User).filter(models.User.username = username).first()
+    if existing_user:
         if hash_password(password) == user.password:
-             return user 
+             return existing_user 
     return False
 
     
@@ -62,10 +61,10 @@ async def create_bucket(db:Session, bucket:schema.Bucket):
 
 
 async def edit_profile(db:Session, profile:schema.Profile, user_id:int):
-    profile = db.query(models.Profile).filter(models.Profile.owner_id == user_id).update(**profile.dict())                                             
+    user_profile = await db.query(models.Profile).filter(models.Profile.owner_id == user_id).update(**profile.dict())                                             
     try:
         await db.commit()
-        await db.refresh(profile)
+        await db.refresh(user_profile)
         return profile
     except Exception as e:
         print(e)

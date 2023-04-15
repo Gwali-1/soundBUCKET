@@ -27,15 +27,18 @@ async def create_user_account(user: schema.UserCreate, db: Session = Depends(get
 
 
 
-@router.post("/login", response_model=schema.Token)
-async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db:Session=Depends(get_db_session):
-   
-    login_credentials ={
-        "username": form_data.username,
-        "password": form_data.password
-    }
 
-    user = db_actions.login(db,login_credentials) 
+@router.post("/login", response_model=schema.Token)
+async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db:Session=Depends(get_db_session)):
+   
+    data = {
+        "username": form_data.username,
+        "passeord": form_data.password
+    } 
+
+    login_credentials =schema.UserLogin(**data)
+
+    user = await db_actions.login(db,login_credentials) 
     if not user:
         raise HTTPException(
             status_code=401, 
@@ -50,5 +53,5 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db:S
 
 
 @router.post("/authenticate_token"):
-
+    pass 
 
