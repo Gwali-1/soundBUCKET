@@ -5,7 +5,6 @@ from sqlalchemy.orm import Session
 from .dependencies  import hash_password
 
 
-#add create account
 
 async def create_account(db:Session, user:schema.UserCreate):
     username = user.username
@@ -23,7 +22,7 @@ async def create_account(db:Session, user:schema.UserCreate):
         
 
 
-#add login
+
 async def login(db:Session, user:schema.UserLogin):
     username = user.username
     password = user.password 
@@ -35,8 +34,6 @@ async def login(db:Session, user:schema.UserLogin):
 
     
 
-
-#add song
 async def add_song(db:Session, song:schema.SongCreate):
     new_song = models.Songs(**song.dict())
     db.add(new_song)
@@ -50,7 +47,6 @@ async def add_song(db:Session, song:schema.SongCreate):
 
 
 
-#add create bucket
 async def create_bucket(db:Session, bucket:schema.Bucket):
     new_bucket = models.Bucket(**bucket.dict())
     db.add(new_bucket)
@@ -65,7 +61,6 @@ async def create_bucket(db:Session, bucket:schema.Bucket):
 
 
 
-#add create/edit profile
 async def edit_profile(db:Session, profile:schema.Profile, user_id:int):
     profile = db.query(models.Profile).filter(models.Profile.owner_id == user_id).update(**profile.dict())                                             
     try:
@@ -79,7 +74,7 @@ async def edit_profile(db:Session, profile:schema.Profile, user_id:int):
 
 
 
-#add 
+
 async def get_bucket_songs_by_name(db:Session, bucket_name:str):
     bucket = await db.query(models.Bucket).filter(models.Bucket.name == bucket_name).first()
     if not bucket:

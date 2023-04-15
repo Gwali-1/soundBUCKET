@@ -1,5 +1,13 @@
 from pydantic import BaseModel
-from sqlalchemy import Column, DateTime
+from sqlalchemy import DateTime
+
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
 
 
 ############################ profile models 
