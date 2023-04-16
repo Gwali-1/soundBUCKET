@@ -1,7 +1,7 @@
 from sqlalchemy import  extract
 from . import models , schema
 from sqlalchemy.orm import Session
-from .dependencies  import hash_password
+from .dependencies  import hashed_password
 
 
 
@@ -25,9 +25,9 @@ async def create_account(db:Session, user:schema.UserCreate):
 async def login(db:Session, user:schema.UserLogin):
     username = user.username
     password = user.password 
-    existing_user = await db.query(models.User).filter(models.User.username = username).first()
+    existing_user = await db.query(models.User).filter(models.User.username == username).first()
     if existing_user:
-        if hash_password(password) == user.password:
+        if hashed_password(password) == user.password:
              return existing_user 
     return False
 

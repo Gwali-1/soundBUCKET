@@ -16,7 +16,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES=30
 
 @router.post("/create", response_model=schema.User)
 async def create_user_account(user: schema.UserCreate, db: Session = Depends(get_db_session)):
-    existing_user = db.query(models.User).filter(models.User.username == user.username).first()
+    existing_user = await db.query(models.User).filter(models.User.username == user.username).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="User with username already exist")
  

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import sessionmaker, declarative_base
 from  decouple import config
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
 URL=  config("SQL_DATABASE_URL")
 print(URL)

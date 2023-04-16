@@ -1,6 +1,5 @@
 from pydantic import BaseModel
-from sqlalchemy import DateTime
-
+from datetime import datetime
 
 
 class Token(BaseModel):
@@ -22,7 +21,7 @@ class Profile(ProfileBase):
     contributions: int
     playlist_exports: int
     created_buckets: int
-    date_joined: DateTime
+    date_joined: datetime
 
 
 class ProfileCreate(ProfileBase):
