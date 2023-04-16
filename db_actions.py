@@ -74,7 +74,7 @@ async def edit_profile(db:Session, profile:schema.Profile, user_id:int):
 
 
 
-async def get_bucket_songs_by_name(db:Session, bucket_name:str):
+async def get_bucket_by_name(db:Session, bucket_name:str):
     bucket = await db.query(models.Bucket).filter(models.Bucket.name == bucket_name).first()
     if not bucket:
         return []
@@ -83,7 +83,7 @@ async def get_bucket_songs_by_name(db:Session, bucket_name:str):
 
 
 
-async def get_bucket_songs_by_month(db:Session, bucket_month:str):
+async def get_bucket_by_month(db:Session, bucket_month:str):
     bucket = await db.query(models.Bucket).filter(extract("month", models.Bucket.created_at) == bucket_month).first()
     if not bucket:
         return []
