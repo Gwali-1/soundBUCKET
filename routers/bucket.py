@@ -1,9 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from ..dependencies import  get_db_session,get_query_token,get_token_header
-from .. import schema, db_actions, models
+from .. import schema, db_actions
 from sqlalchemy.orm import Session
-from typing import Annotated
-from fastapi.responses import JSONResponse
 
 
 router = APIRouter(
@@ -22,11 +20,10 @@ async def make_bucket(bucket:schema.BucketCreate, db:Session = Depends(get_db_se
     return new_bucket
 
 
-        
 
 
 #add get bucket songs with bucket name
-router.post("/get_bucket_by_name", response_model=schema.Bucket)
+@router.get("/get_bucket_by_name", response_model=schema.Bucket)
 async def get_bucket_with_name(bucket_name:str, db:Session = Depends(get_db_session),
                         _:int = Depends(get_query_token)):
     bucket = await db_actions.get_bucket_by_name(db, bucket_name)
@@ -38,7 +35,7 @@ async def get_bucket_with_name(bucket_name:str, db:Session = Depends(get_db_sess
 
 
 #add get bucket songs with bucket month
-router.post("/get_bucket_by_month", response_model=schema.Bucket)
+@router.get("/get_bucket_by_month", response_model=schema.Bucket)
 async def get_bucket_with_month(bucket_month:str, db:Session = Depends(get_db_session),
                         _:int = Depends(get_query_token)):
     bucket = await db_actions.get_bucket_by_month(db, bucket_month)
