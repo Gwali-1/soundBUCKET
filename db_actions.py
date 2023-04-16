@@ -97,7 +97,15 @@ async def get_user(db:Session, user_id:int):
     if not user:
         return []
     return user 
-    
+
+
+
+async def get_user_with_username(db:Session, username:str):
+    user = db.query(models.User).filter(models.User.username == username).first()
+    if not user:
+        return []
+    return user
+
 
 
 
