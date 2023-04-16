@@ -46,7 +46,7 @@ async def add_song(db:Session, song:schema.SongCreate):
 
 
 
-async def create_bucket(db:Session, bucket:schema.Bucket):
+async def create_bucket(db:Session, bucket:schema.BucketCreate):
     new_bucket = models.Bucket(**bucket.dict())
     db.add(new_bucket)
     try:
