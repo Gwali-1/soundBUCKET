@@ -1,3 +1,4 @@
+from typing import List
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -49,7 +50,6 @@ class Song(SongBase):
 
 
 class SongCreate(SongBase):
-    user_id: int
     bucket_name: str 
 
 
@@ -87,6 +87,10 @@ class User(UserBase):
     profile: list[Profile]
     songs: list[Song]
  
+
+class UserSongs(BaseModel):
+    songs: List[Song]
+
 
 class UserCreate(UserBase):
     password: str 

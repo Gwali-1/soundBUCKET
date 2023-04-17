@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from sqlalchemy import  extract
 from . import models , schema
 from sqlalchemy.orm import Session
@@ -17,7 +18,9 @@ async def create_account(db:Session, user:schema.UserCreate):
         return new_user 
     except Exception as e:
         await db.rollback()
-        raise e
+        raise HTTPException(status_code=500, detail="User could not be added") 
+
+
         
 
 
@@ -33,8 +36,8 @@ async def login(db:Session, user:schema.UserLogin):
 
     
 
-async def add_song(db:Session, song:schema.SongCreate):
-    new_song = models.Songs(**song.dict())
+async def add_song(db:Session, song:schema.SongCreate, user_id:int):
+    new_song = models.Songs(**song.dict(), user_id=user_id)
     db.add(new_song)
     try:
         await db.commit()
@@ -42,7 +45,18 @@ async def add_song(db:Session, song:schema.SongCreate):
         return new_song
     except Exception as e:
         print(e)
-        raise e 
+        await db.rollback()
+        raise HTTPException(status_code=500, detail="song could not be added") 
+
+
+
+
+async def get_song(db:Session, song_id:int):
+    song = await db.query(models.Songs).filter(models.Songs.id == song_id).first()
+    if not song:
+        return []
+    return song 
+
 
 
 
@@ -55,8 +69,10 @@ async def create_bucket(db:Session, bucket:schema.BucketCreate):
         return new_bucket
     except Exception as e:
         print(e)
-        db.rollback()
-        raise e
+        await db.rollback()
+        raise HTTPException(status_code=500, detail="bucket could not be added") 
+
+
 
 
 
@@ -68,8 +84,10 @@ async def edit_profile(db:Session, profile:schema.Profile, user_id:int):
         return profile
     except Exception as e:
         print(e)
-        db.rollback()
-        raise e
+        await db.rollback()
+        raise HTTPException(status_code=500, detail="song could not be added") 
+
+
 
 
 

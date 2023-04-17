@@ -2,7 +2,6 @@ from passlib.context import CryptContext
 from  datetime import timedelta, datetime
 from decouple import config
 from jose import JWTError, jwt
-from sqlalchemy import except_ 
 from .async_database import SessionLocal
 from fastapi import HTTPException, Header, status
 from typing import Annotated
@@ -28,6 +27,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
+
 def verify_password(plain_password: str, hashed_password: str):
     return pwd_context.verify(plain_password, hashed_password)
 
@@ -44,6 +44,8 @@ async def get_db_session():
             yield db
         finally:
             await db.close()
+
+
 
 
 
@@ -66,17 +68,26 @@ async def decode_token(token):
         )
   
 
+
+
+
 async def get_token_header(x_token: Annotated[str, Header()]):
     if x_token:
         decoded_token = await decode_token(x_token)
         return decoded_token
   
 
+
+
+
+
 async def get_query_token(token: str):
     if token:
         decoded_token = await decode_token(token)
         return decoded_token
  
+
+
 
 
 

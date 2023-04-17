@@ -81,3 +81,13 @@ async def get_user(id: int = Depends(get_query_token), db:Session=Depends(get_db
     return user
 
 
+
+
+@router.get("/user/songs", response_model=schema.UserSongs)
+async def get_user_song(db:Session = Depends(get_db_session), user_id:int = Depends(get_query_token)):
+    user = await db_actions.get_user(db, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="user not found")   
+    return user.songs
+
+
