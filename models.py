@@ -1,9 +1,9 @@
 from sqlalchemy import  String, Integer, Boolean, Column, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime
-import async_database 
+from .async_database import Base 
 
-Base = async_database.Base
+#Base = async_database.Base
 
 
 class User(Base):

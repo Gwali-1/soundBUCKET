@@ -1,68 +1,79 @@
 from ..async_database import SessionLocal
+from .. import models 
+from spotipy.oauth2 import SpotifyOAuth
+import time 
 
-db = SessionLocal()
 
 
-def get_token_from_db(user_id):
-    conn = sqlite3.connect('database.db')
-    c = conn.cursor()
+def get_auth_object():
+    return  SpotifyOAuth(
+        client_id="464e8943866f4a64b2ce544d12936903",
+        client_secret="53a7460814f7451b9016a89feccf6373",
+        redirect_uri="http://localhost:8000/sportify/callback",
+        scope="playlist-modify-public playlist-modify-private"
 
+    )
+
+
+
+
+async def get_token_from_db(user_id):
     #database query
-    c.execute("SELECT access_token, expires_at, refresh_token FROM tokens WHERE user_id=?", (user_id,))
-    token_data = c.fetchone()
-    conn.close()
-    #check and return 
-    if token_data:
-        return {
-            'access_token': token_data[0],
-            'expires_at': token_data[1],
-            'refresh_token': token_data[2]
-        }
-    else:
-        return None
-
-
-
-
-def save_token_to_db(user_id, access_token, expires_at, refresh_token):
-    conn = sqlite3.connect('database.db')
-    c = conn.cursor()
-    #database query 
-    c.execute("INSERT OR REPLACE INTO tokens (user_id, access_token, expires_at, refresh_token) VALUES (?, ?, ?, ?)", (user_id, access_token, expires_at, refresh_token))
-    conn.commit()
-    conn.close()
+    db = SessionLocal()
+    user = await db.query(models.User).filter(models.User.id == user_id).first()
+    if user:
+        token = user.token
+        if token:
+            await db.close()
+            return {
+                'access_token': token[0],
+                'expires_at': token[2],
+                'refresh_token': token[1]
+            }
+    return None
 
 
 
 
 
-def cache_handler(user_id, token_info = None):
+async def save_token_to_db(user_id, token_info):
+    db = SessionLocal()
+    try:
+        new_token = models.Tokens(token=token_info["access_token"], expires_at=token_info["expires_at"],
+                                  refresh_token=token_info["refresh_token"], owner_id=user_id)
+        db.add(new_token)
+        await db.commit()
+    except:
+        await db.rollback()
+    finally:
+        await db.close()
+
+
+
+
+async def cache_handler(user_id, token_info = None):
     if token_info is None:
-        pass
-
-        token_data = get_token_from_db(user_id)
+        token_data = await get_token_from_db(user_id)
         if token_data and token_data['expires_at'] > time.time():
             return token_data['access_token']
         else:
-        new_token_data = get_new_token(token_data["refresh_token"])
-        save_token_to_db(user_id, new_token_data['access_token'], new_token_data['expires_at'], new_token_data['refresh_token'])
-        return new_token_data['access_token']
+            new_token_data = await get_new_token(token_data["refresh_token"])
+            await save_token_to_db(user_id, new_token_data)
+            return new_token_data['access_token']
 
-    save_token_to_db(user_id, token_info["access_token"], token_info["refresh_token"], token_info["expires_at"])
-
-
+    await save_token_to_db(user_id, token_info)
 
 
 
 
 
-
-def get_new_token(refresh_token):
-    sp_oauth = SpotifyOAuth(client_id='your_client_id,
-    client_secret='your_client_secret', redirect_uri='your_redirect_uri', scope='your_scope')
+def get_new_token(refresh_token):  
+    sp_oauth = get_auth_object()
     token_info = sp_oauth.refresh_access_token(refresh_token)
     return {
         'access_token': token_info['access_token'],
         'expires_at': token_info['expires_at'],
         'refresh_token': token_info['refresh_token']
     }
+
+
