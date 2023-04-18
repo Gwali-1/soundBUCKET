@@ -1,7 +1,9 @@
-from sqlalchemy import ForeignKeyConstraint, String, Integer, Boolean, Column, ForeignKey, DateTime
+from sqlalchemy import  String, Integer, Boolean, Column, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from .async_database import Base
+import async_database 
+
+Base = async_database.Base
 
 
 class User(Base):
@@ -12,6 +14,8 @@ class User(Base):
     password = Column(String)
     profile = relationship("Profile")
     songs = relationship("Songs")
+    token = relationship("user_tokens")
+
 
 
 class Profile(Base):
@@ -29,7 +33,6 @@ class Profile(Base):
 
 
     
-
 class Songs(Base):
     __tablename__ = "songs"
     id = Column(Integer, primary_key=True, index=True)
@@ -46,8 +49,6 @@ class Songs(Base):
 
     
 
-
-
 class Bucket(Base):
     __tablename__ = "bucket"
     id = Column(Integer, primary_key=True, index=True)
@@ -61,8 +62,15 @@ class Bucket(Base):
     
 
 
- 
 
+
+class Tokens(Base):
+    __tablename__ = "user_tokens"
+    id = Column(Integer, primary_key=True)
+    token = Column(String)
+    refresh_token = Column(String)
+    expires_at = Column(String)
+    owner_id = Column(Integer, ForeignKey("users.id"), index=True)
 
 
 
