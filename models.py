@@ -1,9 +1,9 @@
-from sqlalchemy import  String, Integer, Boolean, Column, ForeignKey, DateTime
+from sqlalchemy import  False_, String, Integer, Boolean, Column, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from .async_database import Base 
-
-#Base = async_database.Base
+#from .async_database import Base 
+import async_database
+Base = async_database.Base
 
 
 class User(Base):
@@ -30,6 +30,7 @@ class Profile(Base):
     bio = Column(String)
     date_joined = Column(DateTime)
     owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    authorized = Column(Boolean, default=False)
 
 
     
