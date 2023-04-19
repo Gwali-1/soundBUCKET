@@ -24,6 +24,9 @@ class Profile(ProfileBase):
     created_buckets: int
     date_joined: datetime
 
+    class Config:
+        orm_mode = True 
+
 
 class ProfileCreate(ProfileBase):
     pass 
@@ -65,7 +68,7 @@ class Bucket(BucketBase):
     id: int
     number_of_tracks: int
     upvotes: int
-    songs: list[Song]
+    songs: list[Song] = []
 
     class Config:
         orm_mode=True
@@ -89,6 +92,7 @@ class User(UserBase):
     
     class Config:
         orm_mode=True
+
 
 
 class UserSongs(BaseModel):

@@ -3,6 +3,7 @@ from  datetime import timedelta, datetime
 from decouple import config
 from jose import JWTError, jwt
 from .async_database import SessionLocal
+from .database import SyncSessionLocal
 from fastapi import HTTPException, Header, status
 from typing import Annotated
 
@@ -38,6 +39,8 @@ def hashed_password(password: str):
 
 
 ###dependecies
+
+#async session 
 async def get_db_session():
     async with SessionLocal() as db:
         try:
@@ -46,10 +49,18 @@ async def get_db_session():
             await db.close()
 
 
+#sync session
+def get_sync_db_session():
+    db = SyncSessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 
-async def decode_token(token):
+
+def decode_token(token):
     try:
         payload = jwt.decode(token,SECRET_KEY, ALGORITHM)
         user_id = payload.get("sub")
@@ -71,17 +82,14 @@ async def decode_token(token):
 
 
 
-async def get_token_header(x_token: Annotated[str, Header()]):
+def get_token_header(x_token: Annotated[str, Header()]):
     if x_token:
         decoded_token = await decode_token(x_token)
         return decoded_token
   
 
 
-
-
-
-async def get_query_token(token: str):
+def get_query_token(token: str):
     if token:
         decoded_token = await decode_token(token)
         return decoded_token
@@ -91,20 +99,13 @@ async def get_query_token(token: str):
 
 
 
-async def auth_token(token: Annotated[str, Header()]):
+def auth_token(token: Annotated[str, Header()]):
     try:
         id = await decode_token(token)
         if id:
             return True
     except:
         return False 
-
-
-
-
-
-
-
 
 
 
@@ -125,12 +126,17 @@ def get_token_from_db(user_id):
     else:
         return None
 
+
+
 def save_token_to_db(user_id, access_token, expires_at, refresh_token):
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
     c.execute("INSERT OR REPLACE INTO tokens (user_id, access_token, expires_at, refresh_token) VALUES (?, ?, ?, ?)", (user_id, access_token, expires_at, refresh_token))
     conn.commit()
     conn.close()
+
+
+
 
 def cache_handler(user_id):
     token_data = get_token_from_db(user_id)
@@ -140,8 +146,6 @@ def cache_handler(user_id):
         new_token_data = get_new_token_data_from_api()
         save_token_to_db(user_id, new_token_data['access_token'], new_token_data['expires_at'], new_token_data['refresh_token'])
         return new_token_data['access_token']
-
-
 
 
 
