@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response, responses
 from ..dependencies import  get_db_session, create_access_token,auth_token, get_query_token
 from .. import schema, db_actions
 from sqlalchemy.orm import Session
@@ -37,7 +37,7 @@ async def create_user_account(user: schema.UserCreate, db: Session = Depends(get
 
 
 @router.post("/login", response_model=schema.Token)
-async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db:Session=Depends(get_db_session)):
+async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],response:Response, db:Session=Depends(get_db_session)):
    
     data = {
         "username": form_data.username,
@@ -57,6 +57,7 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db:S
     access_token = create_access_token(
         data={"sub": user.id}, expires_delta=access_token_expires
     )
+    response.set_cookie(key="user_id", value=access_token)
     return {"access_token": access_token, "token_type": "bearer"}
 
 
