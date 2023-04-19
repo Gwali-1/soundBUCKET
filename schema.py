@@ -84,9 +84,12 @@ class UserBase(BaseModel):
 
 class User(UserBase):
     id: int
-    profile: list[Profile]
-    songs: list[Song]
- 
+    profile: list[Profile]  = [] 
+    songs: list[Song]   = []
+    
+    class Config:
+        orm_mode=True
+
 
 class UserSongs(BaseModel):
     songs: List[Song]

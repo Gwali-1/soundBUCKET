@@ -13,7 +13,7 @@ router = APIRouter(
 
 
 @router.get("/callback")
-async def sport_home(code:str, user_id: Annotated[str|None, Cookie()]):
+async def sport_home(code:str): 
     if not code:
         data = {"message":"error, something went wrong"}
         return JSONResponse(content=data, status_code= 400) 

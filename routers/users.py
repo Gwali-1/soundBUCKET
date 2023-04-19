@@ -25,10 +25,13 @@ async def create_user_account(user: schema.UserCreate, db: Session = Depends(get
     existing_user = await db_actions.get_user_with_username(db, user.username) 
     if existing_user:
         raise HTTPException(status_code=400, detail="User with username already exist")
- 
     new_user = await db_actions.create_account(db, user)
+    print(new_user)
     if new_user:
+        print(new_user)
         return new_user
+
+    print("no")
     raise HTTPException(status_code=500, detail="user could not be created at the moment")
 
 

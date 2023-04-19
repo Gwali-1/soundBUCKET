@@ -1,9 +1,9 @@
 from sqlalchemy import  False_, String, Integer, Boolean, Column, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime
-#from .async_database import Base 
-import async_database
-Base = async_database.Base
+from .async_database import Base 
+#import async_database
+#Base = async_database.Base
 
 
 class User(Base):
@@ -14,7 +14,7 @@ class User(Base):
     password = Column(String)
     profile = relationship("Profile")
     songs = relationship("Songs")
-    token = relationship("user_tokens")
+    token = relationship("Tokens")
 
 
 

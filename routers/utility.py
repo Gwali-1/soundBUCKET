@@ -67,6 +67,7 @@ async def cache_handler(user_id, token_info = None):
 
 
 
+
 def get_new_token(refresh_token):  
     sp_oauth = get_auth_object()
     token_info = sp_oauth.refresh_access_token(refresh_token)
