@@ -1,7 +1,5 @@
-from typing import Annotated
 from fastapi import APIRouter, Cookie, Depends, HTTPException, Request
 from fastapi.responses import RedirectResponse, JSONResponse
-from sqlalchemy.orm import Session
 from .utility import get_auth_object , cache_handler
 from ..dependencies import get_query_token,decode_token, get_token_header
 from .. import schema
