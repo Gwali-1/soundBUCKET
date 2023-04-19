@@ -102,4 +102,6 @@ class UserLogin(BaseModel):
 
 
 
+class Code(BaseModel):
+    code: str 
 

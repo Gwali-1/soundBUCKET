@@ -17,7 +17,7 @@ async def make_bucket(bucket:schema.BucketCreate, db:Session = Depends(get_db_se
     new_bucket = await db_actions.create_bucket(db, bucket)
     if not new_bucket:
         raise HTTPException(status_code=400, detail="could not create bucket")
-    return new_bucket
+    return new_bucket 
 
 
 
