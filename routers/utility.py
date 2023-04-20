@@ -4,6 +4,10 @@ import time
 from decouple import config
 from ..database import SyncSessionLocal
 
+
+
+
+
 def get_auth_object():
     return  SpotifyOAuth(
         client_id=config("client_id"),
@@ -12,6 +16,7 @@ def get_auth_object():
         scope="playlist-modify-public playlist-modify-private"
 
     )
+
 
 
 
@@ -29,6 +34,7 @@ def get_token_from_db(user_id):
                 'expires_at': token[2],
                 'refresh_token': token[1]
             }
+
     return None
 
 
@@ -61,7 +67,6 @@ def cache_handler(user_id, token_info = None):
             return new_token_data['access_token']
 
     save_token_to_db(user_id, token_info)
-
 
 
 

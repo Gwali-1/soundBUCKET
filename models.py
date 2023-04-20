@@ -6,6 +6,7 @@ from .database import Base
 #Base = database.Base
 
 
+
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
@@ -15,6 +16,7 @@ class User(Base):
     profile = relationship("Profile")
     songs = relationship("Songs")
     token = relationship("Tokens")
+
 
 
 
@@ -33,6 +35,7 @@ class Profile(Base):
     authorized = Column(Boolean, default=False)
 
 
+
     
 class Songs(Base):
     __tablename__ = "songs"
@@ -49,6 +52,7 @@ class Songs(Base):
     bucket_id = Column(Integer, ForeignKey("bucket.id"))
 
     
+
 
 class Bucket(Base):
     __tablename__ = "bucket"

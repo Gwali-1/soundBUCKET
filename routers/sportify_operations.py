@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Cookie, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends 
 from fastapi.responses import RedirectResponse, JSONResponse
 from .utility import get_auth_object , cache_handler
-from ..dependencies import get_query_token,decode_token, get_token_header
+from ..dependencies import get_token_header
 from .. import schema
 router = APIRouter(
     prefix="/sportify",
@@ -9,7 +9,7 @@ router = APIRouter(
 ) 
 
 
-
+#collect auth code and return it 
 @router.get("/callback")
 async def sport_home(code:str): 
     if not code:
@@ -22,8 +22,7 @@ async def sport_home(code:str):
  
 
 
-
-#save token rout jwt and token info 
+#get token info and save 
 @router.post("/add_token_info")
 async def add_token(code:schema.Code, user_id:int = Depends(get_token_header)):
     auth_object = get_auth_object()
@@ -34,9 +33,9 @@ async def add_token(code:schema.Code, user_id:int = Depends(get_token_header)):
 
 
 
-
+#spotofy auth route 
 @router.get("/authenticate")
-async def authorize_spotify(user_id:int = Depends(get_query_token)):
+async def authorize_spotify():
 
     #check if user has token 
     auth_object = get_auth_object()
@@ -45,5 +44,3 @@ async def authorize_spotify(user_id:int = Depends(get_query_token)):
     return RedirectResponse(url)
 
 
-#create route to export laylist 
-#checks if user has token first #then checks if token code in header # if none -> authorize # in header -> save , has token -> use 

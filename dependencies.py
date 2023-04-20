@@ -11,11 +11,13 @@ SECRET_KEY = config("SECRET_KEY")
 ALGORITHM = config("TOKEN_ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
+
+#hash_context
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated ="auto" )
 
 
 
-
+#generate access token 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
     if expires_delta:
@@ -28,6 +30,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 
 
 
+
 def verify_password(plain_password: str, hashed_password: str):
     return pwd_context.verify(plain_password, hashed_password)
 
@@ -35,9 +38,6 @@ def verify_password(plain_password: str, hashed_password: str):
 def hashed_password(password: str):
     return pwd_context.hash(password)
 
-
-
-###dependecies
 
 
 
@@ -51,7 +51,7 @@ def get_sync_db_session():
 
 
 
-
+#decode access token 
 def decode_token(token):
     try:
         print(type(token))
@@ -76,7 +76,7 @@ def decode_token(token):
 
 
 
-
+#get token from header 
 def get_token_header(x_token: Annotated[str, Header()]):
     if x_token:
         print(x_token)
@@ -84,7 +84,7 @@ def get_token_header(x_token: Annotated[str, Header()]):
         return decoded_token
   
 
-
+#get token from url 
 def get_query_token(token: str):
     if token:
         decoded_token = decode_token(token)
@@ -92,9 +92,7 @@ def get_query_token(token: str):
  
 
 
-
-
-
+#authenticate token 
 def auth_token(token: Annotated[str, Header()]):
     try:
         id = decode_token(token)

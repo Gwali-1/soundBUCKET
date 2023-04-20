@@ -13,9 +13,8 @@ router = APIRouter(
     prefix="/user",
     tags=["users"]
 )
-
-
 ACCESS_TOKEN_EXPIRE_MINUTES=30
+
 
 
 
@@ -68,11 +67,15 @@ def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],response:Re
 
 
 
+
 @router.post("/authenticate_token")
 def authenticate_token(check:bool = Depends(auth_token)):
     if check:
         return JSONResponse(content={"message":"valid"},status_code=200)
     return JSONResponse(content={"message":"invalid"},status_code=401)
+
+
+
 
 
 
