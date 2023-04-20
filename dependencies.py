@@ -2,7 +2,6 @@ from passlib.context import CryptContext
 from  datetime import timedelta, datetime
 from decouple import config
 from jose import JWTError, jwt
-from .async_database import SessionLocal
 from .database import SyncSessionLocal
 from fastapi import HTTPException, Header, status
 from typing import Annotated
@@ -40,13 +39,6 @@ def hashed_password(password: str):
 
 ###dependecies
 
-#async session 
-async def get_db_session():
-    async with SessionLocal() as db:
-        try:
-            yield db
-        finally:
-            await db.close()
 
 
 #sync session
@@ -62,7 +54,9 @@ def get_sync_db_session():
 
 def decode_token(token):
     try:
-        payload = jwt.decode(token,SECRET_KEY, ALGORITHM)
+        print(type(token))
+        payload = jwt.decode(token,SECRET_KEY, algorithms=[ALGORITHM])
+        print(payload)
         user_id = payload.get("sub")
         if user_id is None:
             raise HTTPException(
@@ -70,8 +64,9 @@ def decode_token(token):
                 detail="Could not validate credentials",
                 headers={"WWW-Authenticate": "Bearer"},
             )
-        return user_id
-    except JWTError:
+        return int(user_id)
+    except Exception as e:
+        print(e)
         raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -84,14 +79,15 @@ def decode_token(token):
 
 def get_token_header(x_token: Annotated[str, Header()]):
     if x_token:
-        decoded_token = await decode_token(x_token)
+        print(x_token)
+        decoded_token = decode_token(x_token)
         return decoded_token
   
 
 
 def get_query_token(token: str):
     if token:
-        decoded_token = await decode_token(token)
+        decoded_token = decode_token(token)
         return decoded_token
  
 
@@ -101,7 +97,7 @@ def get_query_token(token: str):
 
 def auth_token(token: Annotated[str, Header()]):
     try:
-        id = await decode_token(token)
+        id = decode_token(token)
         if id:
             return True
     except:
@@ -110,50 +106,3 @@ def auth_token(token: Annotated[str, Header()]):
 
 
 
-
-def get_token_from_db(user_id):
-    conn = sqlite3.connect('database.db')
-    c = conn.cursor()
-    c.execute("SELECT access_token, expires_at, refresh_token FROM tokens WHERE user_id=?", (user_id,))
-    token_data = c.fetchone()
-    conn.close()
-    if token_data:
-        return {
-            'access_token': token_data[0],
-            'expires_at': token_data[1],
-            'refresh_token': token_data[2]
-        }
-    else:
-        return None
-
-
-
-def save_token_to_db(user_id, access_token, expires_at, refresh_token):
-    conn = sqlite3.connect('database.db')
-    c = conn.cursor()
-    c.execute("INSERT OR REPLACE INTO tokens (user_id, access_token, expires_at, refresh_token) VALUES (?, ?, ?, ?)", (user_id, access_token, expires_at, refresh_token))
-    conn.commit()
-    conn.close()
-
-
-
-
-def cache_handler(user_id):
-    token_data = get_token_from_db(user_id)
-    if token_data and token_data['expires_at'] > time.time():
-        return token_data['access_token']
-    else:
-        new_token_data = get_new_token_data_from_api()
-        save_token_to_db(user_id, new_token_data['access_token'], new_token_data['expires_at'], new_token_data['refresh_token'])
-        return new_token_data['access_token']
-
-
-
-def get_new_token_data_from_api():
-    sp_oauth = SpotifyOAuth(client_id='your_client_id', client_secret='your_client_secret', redirect_uri='your_redirect_uri', scope='your_scope')
-    token_info = sp_oauth.get_access_token()
-    return {
-        'access_token': token_info['access_token'],
-        'expires_at': token_info['expires_at'],
-        'refresh_token': token_info['refresh_token']
-    }

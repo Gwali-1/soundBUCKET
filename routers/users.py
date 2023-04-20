@@ -44,7 +44,7 @@ def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],response:Re
    
     data = {
         "username": form_data.username,
-        "passeord": form_data.password
+        "password": form_data.password
     } 
 
     login_credentials =schema.UserLogin(**data)
@@ -58,7 +58,7 @@ def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],response:Re
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.id}, expires_delta=access_token_expires
+        data={"sub": str(user.id)}, expires_delta=access_token_expires
     )
     response.set_cookie(key="user_id", value=access_token)
     return {"access_token": access_token, "token_type": "bearer"}

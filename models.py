@@ -1,9 +1,9 @@
 from sqlalchemy import  False_, String, Integer, Boolean, Column, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from .async_database import Base 
-#import async_database
-#Base = async_database.Base
+from .database import Base 
+#import database
+#Base = database.Base
 
 
 class User(Base):
@@ -55,7 +55,7 @@ class Bucket(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True , index=True)
     description = Column(String)
-    number_of_tracks = Column(Integer)
+    number_of_tracks = Column(Integer, default=0)
     created_at = Column(DateTime,index=True, default=datetime.now)
     cover_art_url = Column(String)
     upvotes = Column(Integer, default=0)

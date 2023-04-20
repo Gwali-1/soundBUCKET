@@ -53,7 +53,7 @@ class Song(SongBase):
 
 
 class SongCreate(SongBase):
-    bucket_name: str 
+    bucket_id: int 
 
 
 

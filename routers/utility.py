@@ -19,7 +19,7 @@ def get_auth_object():
 def get_token_from_db(user_id):
     #database query
     db = SyncSessionLocal()
-    user = await db.query(models.User).filter(models.User.id == user_id).first()
+    user = db.query(models.User).filter(models.User.id == user_id).first()
     if user:
         token = user.token
         if token:

@@ -2,7 +2,7 @@ from fastapi import HTTPException
 from sqlalchemy import  extract,  select, update
 from . import models , schema
 from sqlalchemy.orm import Session
-from .dependencies  import hashed_password
+from .dependencies  import hashed_password, verify_password
 
 
 
@@ -30,8 +30,12 @@ def login(db:Session, user:schema.UserLogin):
     username = user.username
     password = user.password 
     existing_user =  db.query(models.User).filter(models.User.username == username).first()
+    print(existing_user)
     if existing_user:
-        if hashed_password(password) == user.password:
+        print(password)
+        print(existing_user.password)
+        print(hashed_password(password))
+        if verify_password(password, existing_user.password):
              return existing_user 
     return False
 
