@@ -36,7 +36,7 @@ def get_bucket_with_name(bucket_name:str, db:Session = Depends(get_sync_db_sessi
 
 #add get bucket songs with bucket month
 @router.get("/get_bucket_by_month", response_model=schema.Bucket)
-def get_bucket_with_month(bucket_month:str, db:Session = Depends(get_sync_db_session),
+def get_bucket_with_month(bucket_month:int, db:Session = Depends(get_sync_db_session),
                         _:int = Depends(get_query_token)):
     bucket = db_actions.get_bucket_by_month(db, bucket_month)
     if not bucket:

@@ -57,7 +57,7 @@ def add_song(db:Session, song:schema.SongCreate, user_id:int):
 
 
 def get_song(db:Session, song_id:int):
-    song = db.query(models.Songs).filter(models.User.id == song_id).first()
+    song = db.query(models.Songs).filter(models.Songs.id == song_id).first()
     if not song:
         return []
     return song 
@@ -104,17 +104,19 @@ def get_bucket_by_name(db:Session, bucket_name:str):
 
 
 
-def get_bucket_by_month(db:Session, bucket_month:str):
-    bucket = db.query(models.Bucket).filter(extract("month", models.Bucket.created_at) == bucket_month)
+def get_bucket_by_month(db:Session, bucket_month:int):
+    print(bucket_month)
+    bucket = db.query(models.Bucket).filter(extract("month", models.Bucket.created_at) == bucket_month).first()
     if not bucket:
         return []
-    return bucket 
+    return bucket
 
 
 
 
 def get_user(db:Session, user_id:int):
     user = db.query(models.User).filter(models.User.id == user_id).first()
+    print(user)
     if not user:
         return []
     return user 

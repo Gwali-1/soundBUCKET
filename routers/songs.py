@@ -24,12 +24,12 @@ def add_to_bucket(song:schema.SongCreate, db:Session = Depends(get_sync_db_sessi
 
 
 #add song details
-@router.get("song/{song_id}", response_model=schema.Song)
+@router.get("/get/{song_id}", response_model=schema.Song)
 def get_song(song_id:int, db:Session = Depends(get_sync_db_session),
                    _:int = Depends(get_query_token)):
     song = db_actions.get_song(db, song_id)
     if not song:
-        return []
+         raise HTTPException(status_code=400, detail="could not get song")
     return song
 
 

@@ -36,11 +36,10 @@ async def add_token(code:schema.Code, user_id:int = Depends(get_token_header)):
 #spotofy auth route 
 @router.get("/authenticate")
 async def authorize_spotify():
-
     #check if user has token 
     auth_object = get_auth_object()
     url = auth_object.get_authorize_url()
-    print(type(url))
+    print(url)
     return RedirectResponse(url)
 
 
