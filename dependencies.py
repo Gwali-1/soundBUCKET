@@ -54,7 +54,6 @@ def get_sync_db_session():
 #decode access token 
 def decode_token(token):
     try:
-        print(type(token))
         payload = jwt.decode(token,SECRET_KEY, algorithms=[ALGORITHM])
         print(payload)
         user_id = payload.get("sub")
@@ -65,8 +64,7 @@ def decode_token(token):
                 headers={"WWW-Authenticate": "Bearer"},
             )
         return int(user_id)
-    except Exception as e:
-        print(e)
+    except JWTError:
         raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
