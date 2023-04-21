@@ -69,6 +69,7 @@ class Bucket(BucketBase):
     number_of_tracks: int
     upvotes: int
     songs: list[Song] = []
+    created_at: datetime 
 
     class Config:
         orm_mode=True
