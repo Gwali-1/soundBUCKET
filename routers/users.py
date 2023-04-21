@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Response, responses
+from fastapi import APIRouter, Depends, HTTPException, Response 
 from ..dependencies import  get_sync_db_session, create_access_token,auth_token, get_query_token
 from .. import schema, db_actions
 from sqlalchemy.orm import Session
@@ -35,6 +35,9 @@ def create_user_account(user: schema.UserCreate, db: Session = Depends(get_sync_
 
 
 
+@router.post("create_profile", response_model=schema.Profile)
+def create_user_profile(profile:schema.ProfileCreate, user_id:int, db:Session = Depends(get_sync_db_session)):
+    pass
 
 
 

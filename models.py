@@ -63,6 +63,7 @@ class Bucket(Base):
     created_at = Column(DateTime,index=True, default=datetime.now)
     cover_art_url = Column(String)
     upvotes = Column(Integer, default=0)
+    closed = Column(Boolean, default=0)
     songs = relationship("Songs")
     
 

@@ -10,7 +10,6 @@ router = APIRouter(
 )
 
 
-#add create bucket
 @router.post("/create_bucket", response_model=schema.Bucket)
 def make_bucket(bucket:schema.BucketCreate, db:Session = Depends(get_sync_db_session),
                         _:int = Depends(get_token_header)):
@@ -22,7 +21,6 @@ def make_bucket(bucket:schema.BucketCreate, db:Session = Depends(get_sync_db_ses
 
 
 
-#add get bucket songs with bucket name
 @router.get("/get_bucket_by_name", response_model=schema.Bucket)
 def get_bucket_with_name(bucket_name:str, db:Session = Depends(get_sync_db_session),
                         _:int = Depends(get_query_token)):
@@ -34,7 +32,6 @@ def get_bucket_with_name(bucket_name:str, db:Session = Depends(get_sync_db_sessi
 
 
 
-#add get bucket songs with bucket month
 @router.get("/get_bucket_by_month", response_model=schema.Bucket)
 def get_bucket_with_month(bucket_month:int, db:Session = Depends(get_sync_db_session),
                         _:int = Depends(get_query_token)):
@@ -42,5 +39,28 @@ def get_bucket_with_month(bucket_month:int, db:Session = Depends(get_sync_db_ses
     if not bucket:
         raise HTTPException(status_code=400, detail="Bucket not found")
     return bucket
+
+
+
+
+
+@router.get("/all_buckets")
+def get_buckets(db:Session = Depends(get_sync_db_session),_:int= Depends(get_query_token)):
+    buckets = db_actions.get_all_buckets(db)
+    if not buckets:
+        raise HTTPException(status_code=404, detail="no buckets found")
+    return buckets
+
+
+
+
+
+
+
+
+
+
+
+
 
 

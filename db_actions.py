@@ -105,13 +105,18 @@ def get_bucket_by_name(db:Session, bucket_name:str):
 
 
 def get_bucket_by_month(db:Session, bucket_month:int):
-    print(bucket_month)
     bucket = db.query(models.Bucket).filter(extract("month", models.Bucket.created_at) == bucket_month).first()
     if not bucket:
         return []
     return bucket
 
 
+
+def get_all_buckets(db:Session):
+    buckets = db.query(models.Bucket).all()
+    return buckets
+
+    
 
 
 def get_user(db:Session, user_id:int):
