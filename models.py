@@ -19,7 +19,6 @@ class User(Base):
 
 
 
-
 class Profile(Base):
     __tablename__ = "profile"
     id = Column(Integer, primary_key=True, index=True)

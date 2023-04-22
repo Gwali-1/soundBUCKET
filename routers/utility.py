@@ -48,6 +48,12 @@ def save_token_to_db(user_id, token_info):
                                   refresh_token=token_info["refresh_token"], owner_id=user_id)
         db.add(new_token)
         db.commit()
+        
+        profile = db.query(models.Profile).filter(models.Profile.owner_id == user_id).first()
+        if profile:
+            profile.authorized = True
+            db.commit()
+
     except:
         db.rollback()
     finally:
