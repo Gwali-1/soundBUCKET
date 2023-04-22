@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import JSONResponse
 from ..dependencies import  get_sync_db_session,get_query_token,get_token_header
 from .. import schema, db_actions
 from sqlalchemy.orm import Session
@@ -50,6 +51,16 @@ def get_buckets(db:Session = Depends(get_sync_db_session),_:int= Depends(get_que
     if not buckets:
         raise HTTPException(status_code=404, detail="no buckets found")
     return buckets
+
+
+
+
+@router.patch("/close/{bucket_name}") 
+def close_bucket(bucket_name:str, db:Session = Depends(get_sync_db_session), _:int = Depends(get_token_header)):
+    closed = db_actions.close_bucket(db,bucket_name)
+    if closed:
+        return JSONResponse(content="SUCCESS", status_code=200)
+    return JSONResponse(content="FAIL", status_code=500)
 
 
 

@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from sqlalchemy import  extract,  select, update
+from sqlalchemy import  except_, extract,  select, update
 from . import models , schema
 from sqlalchemy.orm import Session
 from .dependencies  import hashed_password, verify_password
@@ -39,9 +39,15 @@ def login(db:Session, user:schema.UserLogin):
              return existing_user 
     return False
 
-    
+
+
+
 
 def add_song(db:Session, song:schema.SongCreate, user_id:int):
+    bucket =  db.query(models.Bucket).filter(models.Bucket.id == song.bucket_id).first()
+    if bucket.closed:
+        raise HTTPException(status_code=401, detail="bucket is cloed")
+
     new_song = models.Songs(**song.dict(), user_id=user_id)
     db.add(new_song)
     try:
@@ -56,11 +62,14 @@ def add_song(db:Session, song:schema.SongCreate, user_id:int):
 
 
 
+
 def get_song(db:Session, song_id:int):
     song = db.query(models.Songs).filter(models.Songs.id == song_id).first()
     if not song:
         return []
     return song 
+
+
 
 
 
@@ -81,6 +90,7 @@ def create_bucket(db:Session, bucket:schema.BucketCreate):
 
 
 
+
 def edit_profile(db:Session, profile:schema.Profile, user_id:int):
     try:
         profile = db.query(models.Profile).filter(models.Profile.owner_id == user_id).update(profile.dict())
@@ -95,11 +105,15 @@ def edit_profile(db:Session, profile:schema.Profile, user_id:int):
 
 
 
+
+
 def get_bucket_by_name(db:Session, bucket_name:str):
     bucket = db.query(models.Bucket).filter(models.Bucket.name == bucket_name).first()
     if not bucket:
         return []
     return bucket 
+
+
 
 
 
@@ -112,11 +126,23 @@ def get_bucket_by_month(db:Session, bucket_month:int):
 
 
 
+
+
 def get_all_buckets(db:Session):
     buckets = db.query(models.Bucket).all()
     return buckets
 
     
+def close_bucket(db:Session, bucket_name:str):
+    bucket = db.query(models.Bucket).filter(models.Bucket.name == bucket_name).first()
+    if  not bucket:
+        raise HTTPException(status_code=401, detail="Bucket does not exist")
+    bucket.closed = True
+    try:
+        db.commit()
+        return True 
+    except:
+        return False
 
 
 def get_user(db:Session, user_id:int):
