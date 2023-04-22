@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from datetime import datetime
 
 
+###################### token 
 class Token(BaseModel):
     access_token: str
     token_type: str
@@ -68,7 +69,7 @@ class Bucket(BucketBase):
     id: int
     number_of_tracks: int
     upvotes: int
-    songs: list[Song] = []
+    songs: list[Song] | None = []
     created_at: datetime 
 
     class Config:
@@ -88,20 +89,17 @@ class UserBase(BaseModel):
 
 class User(UserBase):
     id: int
-    profile: list[Profile]  = [] 
-    songs: list[Song]   = []
+    profile: list[Profile] | None = [] 
+    songs: list[Song] | None = []
     
     class Config:
         orm_mode=True
 
 
 
-class UserSongs(BaseModel):
-    songs: List[Song]
-
-
 class UserCreate(UserBase):
     password: str 
+
 
 
 class UserLogin(BaseModel):
@@ -110,6 +108,7 @@ class UserLogin(BaseModel):
 
 
 
+############################ auth code
 class Code(BaseModel):
     code: str 
 
