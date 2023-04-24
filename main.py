@@ -9,7 +9,6 @@ app.include_router(songs.router)
 app.include_router(sportify_operations.router)
 
 
-
 @app.get("/")
 def home():
     return "home"
