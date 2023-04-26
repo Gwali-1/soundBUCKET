@@ -24,8 +24,6 @@ def create_account(db:Session, user:schema.UserCreate):
 
         
 
-
-
 def login(db:Session, user:schema.UserLogin):
     username = user.username
     password = user.password 
@@ -38,7 +36,6 @@ def login(db:Session, user:schema.UserLogin):
         if verify_password(password, existing_user.password):
              return existing_user 
     return False
-
 
 
 
@@ -72,8 +69,6 @@ def get_song(db:Session, song_id:int):
 
 
 
-
-
 def create_bucket(db:Session, bucket:schema.BucketCreate):
     new_bucket = models.Bucket(**bucket.dict())
     db.add(new_bucket)
@@ -85,8 +80,6 @@ def create_bucket(db:Session, bucket:schema.BucketCreate):
         print(e)
         db.rollback()
         raise HTTPException(status_code=500, detail="bucket could not be added") 
-
-
 
 
 
@@ -116,8 +109,6 @@ def get_bucket_by_name(db:Session, bucket_name:str):
 
 
 
-
-
 def get_bucket_by_month(db:Session, bucket_month:int):
     bucket = db.query(models.Bucket).filter(extract("month", models.Bucket.created_at) == bucket_month).first()
     if not bucket:
@@ -126,11 +117,10 @@ def get_bucket_by_month(db:Session, bucket_month:int):
 
 
 
-
-
 def get_all_buckets(db:Session):
     buckets = db.query(models.Bucket).all()
     return buckets
+
 
     
 def close_bucket(db:Session, bucket_name:str):

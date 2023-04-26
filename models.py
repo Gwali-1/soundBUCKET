@@ -35,7 +35,7 @@ class Profile(Base):
 
 
 
-    
+#add song added count , likes     
 class Songs(Base):
     __tablename__ = "songs"
     id = Column(Integer, primary_key=True, index=True)
