@@ -98,7 +98,9 @@ class User(UserBase):
 
 
 class UserCreate(UserBase):
-    password: str 
+    password: str
+    confirm_password: str
+
 
 
 
