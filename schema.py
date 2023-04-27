@@ -1,5 +1,5 @@
 from typing import List
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr, constr 
 from datetime import datetime
 
 
@@ -83,8 +83,9 @@ class BucketCreate(BucketBase):
 
 ####################### user models
 class UserBase(BaseModel):
-    username: str 
-    email: str 
+    username: constr(strip_whitespace=True, min_length=2) 
+    email: EmailStr 
+ 
     
 
 class User(UserBase):
@@ -98,8 +99,9 @@ class User(UserBase):
 
 
 class UserCreate(UserBase):
-    password: str
-    confirm_password: str
+    password: constr(strip_whitespace=True, min_length=8) 
+    confirm_password: constr(strip_whitespace=True, min_length=8) 
+
 
 
 

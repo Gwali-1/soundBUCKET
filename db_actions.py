@@ -9,6 +9,10 @@ from .dependencies  import hashed_password, verify_password
 def create_account(db:Session, user:schema.UserCreate):
     username = user.username
     password = user.password
+    confirm_password = user.confirm_password
+
+    if password != confirm_password:
+        raise HTTPException(status_code=401, detail="passwords are not the same")
     email= user.email
     new_user = models.User(username=username,email=email, password=hashed_password(password))
     db.add(new_user)
