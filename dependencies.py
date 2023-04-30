@@ -17,7 +17,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated ="auto" )
 
 
 
-#generate access token 
+#generate access token
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
     if expires_delta:
@@ -51,7 +51,7 @@ def get_sync_db_session():
 
 
 
-#decode access token 
+#decode access token
 def decode_token(token):
     try:
         payload = jwt.decode(token,SECRET_KEY, algorithms=[ALGORITHM])
@@ -70,34 +70,33 @@ def decode_token(token):
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
         )
-  
 
 
 
-#get token from header 
+
+#get token from header
 def get_token_header(x_token: Annotated[str, Header()]):
     if x_token:
-        print(x_token)
         decoded_token = decode_token(x_token)
         return decoded_token
-  
 
-#get token from url 
+
+#get token from url
 def get_query_token(token: str):
     if token:
         decoded_token = decode_token(token)
         return decoded_token
- 
 
 
-#authenticate token 
+
+#authenticate token
 def auth_token(token: Annotated[str, Header()]):
     try:
         id = decode_token(token)
         if id:
             return True
     except:
-        return False 
+        return False
 
 
 

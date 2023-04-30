@@ -1,9 +1,9 @@
 from typing import List
-from pydantic import BaseModel, EmailStr, constr 
+from pydantic import BaseModel, EmailStr, constr
 from datetime import datetime
 
 
-###################### token 
+###################### token
 class Token(BaseModel):
     access_token: str
     token_type: str
@@ -11,7 +11,7 @@ class Token(BaseModel):
 
 
 
-############################ profile models 
+############################ profile models
 class ProfileBase(BaseModel):
     sportify_profile: str | None = None
     twitter_profile: str | None = None
@@ -26,35 +26,35 @@ class Profile(ProfileBase):
     date_joined: datetime
 
     class Config:
-        orm_mode = True 
+        orm_mode = True
 
 
 class ProfileCreate(ProfileBase):
-    pass 
+    pass
 
 
 
-####################### song models 
+####################### song models
 class SongBase(BaseModel):
-    title: str 
+    title: str
     song_id: str
     artist_name: str
     cover_art_url: str
     preview_url: str
     external_url: str
-    song_duration: str 
+    song_duration: str
 
 
 class Song(SongBase):
     id: int
 
     class Config:
-        orm_mode=True 
+        orm_mode=True
 
 
 
 class SongCreate(SongBase):
-    bucket_id: int 
+    bucket_id: int
 
 
 
@@ -63,14 +63,14 @@ class BucketBase(BaseModel):
     name: str
     description: str
     cover_art_url: str
- 
+
 
 class Bucket(BucketBase):
     id: int
     number_of_tracks: int
     upvotes: int
     songs: list[Song] | None = []
-    created_at: datetime 
+    created_at: datetime
 
     class Config:
         orm_mode=True
@@ -83,24 +83,24 @@ class BucketCreate(BucketBase):
 
 ####################### user models
 class UserBase(BaseModel):
-    username: constr(strip_whitespace=True, min_length=2) 
-    email: EmailStr 
- 
-    
+    username: constr(strip_whitespace=True, min_length=2)
+    email: EmailStr
+
+
 
 class User(UserBase):
     id: int
-    profile: list[Profile] | None = [] 
+    profile: list[Profile] | None = []
     songs: list[Song] | None = []
-    
+
     class Config:
         orm_mode=True
 
 
 
 class UserCreate(UserBase):
-    password: constr(strip_whitespace=True, min_length=8) 
-    confirm_password: constr(strip_whitespace=True, min_length=8) 
+    password: constr(strip_whitespace=True, min_length=8)
+    confirm_password: constr(strip_whitespace=True, min_length=8)
 
 
 
@@ -114,5 +114,6 @@ class UserLogin(BaseModel):
 
 ############################ auth code
 class Code(BaseModel):
-    code: str 
+    code: str
+
 

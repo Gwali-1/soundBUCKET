@@ -19,18 +19,18 @@ def create_account(db:Session, user:schema.UserCreate):
     try:
         db.commit()
         db.refresh(new_user)
-        return new_user  
+        return new_user
     except Exception as e:
         print(e)
         db.rollback()
-        raise HTTPException(status_code=500, detail="User could not be added") 
+        raise HTTPException(status_code=500, detail="User could not be added")
 
 
-        
+
 
 def login(db:Session, user:schema.UserLogin):
     username = user.username
-    password = user.password 
+    password = user.password
     existing_user =  db.query(models.User).filter(models.User.username == username).first()
     print(existing_user)
     if existing_user:
@@ -38,7 +38,7 @@ def login(db:Session, user:schema.UserLogin):
         print(existing_user.password)
         print(hashed_password(password))
         if verify_password(password, existing_user.password):
-             return existing_user 
+             return existing_user
     return False
 
 
@@ -58,7 +58,7 @@ def add_song(db:Session, song:schema.SongCreate, user_id:int):
     except Exception as e:
         print(e)
         db.rollback()
-        raise HTTPException(status_code=500, detail="song could not be added") 
+        raise HTTPException(status_code=500, detail="song could not be added")
 
 
 
@@ -68,7 +68,7 @@ def get_song(db:Session, song_id:int):
     song = db.query(models.Songs).filter(models.Songs.id == song_id).first()
     if not song:
         return []
-    return song 
+    return song
 
 
 
@@ -83,7 +83,7 @@ def create_bucket(db:Session, bucket:schema.BucketCreate):
     except Exception as e:
         print(e)
         db.rollback()
-        raise HTTPException(status_code=500, detail="bucket could not be added") 
+        raise HTTPException(status_code=500, detail="bucket could not be added")
 
 
 
@@ -94,11 +94,11 @@ def edit_profile(db:Session, profile:schema.Profile, user_id:int):
         db.commit()
 
         updated_profile = db.query(models.Profile).filter(models.Profile.owner_id == user_id).first()
-        return updated_profile 
+        return updated_profile
     except Exception as e:
         print(e)
         db.rollback()
-        raise HTTPException(status_code=500, detail="song could not be added") 
+        raise HTTPException(status_code=500, detail="song could not be added")
 
 
 
@@ -108,7 +108,7 @@ def get_bucket_by_name(db:Session, bucket_name:str):
     bucket = db.query(models.Bucket).filter(models.Bucket.name == bucket_name).first()
     if not bucket:
         return []
-    return bucket 
+    return bucket
 
 
 
@@ -126,7 +126,7 @@ def get_all_buckets(db:Session):
     return buckets
 
 
-    
+
 def close_bucket(db:Session, bucket_name:str):
     bucket = db.query(models.Bucket).filter(models.Bucket.name == bucket_name).first()
     if  not bucket:
@@ -134,9 +134,10 @@ def close_bucket(db:Session, bucket_name:str):
     bucket.closed = True
     try:
         db.commit()
-        return True 
+        return True
     except:
         return False
+
 
 
 def get_user(db:Session, user_id:int):
@@ -144,7 +145,7 @@ def get_user(db:Session, user_id:int):
     print(user)
     if not user:
         return []
-    return user 
+    return user
 
 
 

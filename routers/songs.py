@@ -14,13 +14,13 @@ router = APIRouter(
 
 #add add song to bucket
 @router.post("/add_to_bucket", response_model=schema.Song)
-def add_to_bucket(song:schema.SongCreate, db:Session = Depends(get_sync_db_session), 
+def add_to_bucket(song:schema.SongCreate, db:Session = Depends(get_sync_db_session),
                         user_id:int = Depends(get_token_header)):
     new_song = db_actions.add_song(db, song, user_id)
     if not new_song:
         raise HTTPException(status_code=400, detail="could not create bucket")
     return new_song
-    
+
 
 
 #add song details

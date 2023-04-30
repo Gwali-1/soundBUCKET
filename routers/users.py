@@ -23,8 +23,8 @@ ACCESS_TOKEN_EXPIRE_MINUTES=30
 def create_user_account(user: schema.UserCreate, db: Session = Depends(get_sync_db_session)):
     existing_user = db_actions.get_user_with_username(db, user.username) 
     if existing_user:
-        raise HTTPException(status_code=400, detail="User with username already exist")
-    new_user = db_actions.create_account(db, user)
+        raise HTTPException(status_code=400, detail="User with username already exist")    
+    new_user = db_actions.create_account(db, user) 
     print(new_user)
     if new_user:
         print(new_user)
@@ -83,7 +83,7 @@ def authenticate_token(check:bool = Depends(auth_token)):
 
 
 
-@router.get("/user", response_model=schema.User)
+@router.get("/user_info", response_model=schema.User)
 def get_user(id: int = Depends(get_query_token), db:Session=Depends(get_sync_db_session)):
     user =  db_actions.get_user(db, id)
     if not user:

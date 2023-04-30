@@ -1,7 +1,7 @@
 from sqlalchemy import  False_, String, Integer, Boolean, Column, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from .database import Base 
+from .database import Base
 #import database
 #Base = database.Base
 
@@ -35,7 +35,7 @@ class Profile(Base):
 
 
 
-#add song added count , likes     
+#add song added count , likes
 class Songs(Base):
     __tablename__ = "songs"
     id = Column(Integer, primary_key=True, index=True)
@@ -50,7 +50,7 @@ class Songs(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     bucket_id = Column(Integer, ForeignKey("bucket.id"))
 
-    
+
 
 
 class Bucket(Base):
@@ -64,7 +64,7 @@ class Bucket(Base):
     upvotes = Column(Integer, default=0)
     closed = Column(Boolean, default=0)
     songs = relationship("Songs")
-    
+
 
 
 
