@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Response 
+from fastapi import APIRouter, Depends, HTTPException, Response
 from ..dependencies import  get_sync_db_session, create_access_token,auth_token, get_query_token
 from .. import schema, db_actions
 from sqlalchemy.orm import Session
@@ -21,10 +21,10 @@ ACCESS_TOKEN_EXPIRE_MINUTES=30
 
 @router.post("/create", response_model=schema.User)
 def create_user_account(user: schema.UserCreate, db: Session = Depends(get_sync_db_session)):
-    existing_user = db_actions.get_user_with_username(db, user.username) 
+    existing_user = db_actions.get_user_with_username(db, user.username)
     if existing_user:
-        raise HTTPException(status_code=400, detail="User with username already exist")    
-    new_user = db_actions.create_account(db, user) 
+        raise HTTPException(status_code=400, detail="User with username already exist")
+    new_user = db_actions.create_account(db, user)
     print(new_user)
     if new_user:
         print(new_user)
@@ -43,18 +43,17 @@ def create_user_profile(profile:schema.ProfileCreate, user_id:int, db:Session = 
 
 @router.post("/login", response_model=schema.Token)
 def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],response:Response, db:Session=Depends(get_sync_db_session)):
-   
     data = {
         "username": form_data.username,
         "password": form_data.password
-    } 
+    }
 
     login_credentials =schema.UserLogin(**data)
 
-    user = db_actions.login(db,login_credentials) 
+    user = db_actions.login(db,login_credentials)
     if not user:
         raise HTTPException(
-            status_code=401, 
+            status_code=401,
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )

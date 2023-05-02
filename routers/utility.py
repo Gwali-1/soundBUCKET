@@ -47,7 +47,7 @@ def save_token_to_db(user_id, token_info):
         token_exit = db.query(models.Tokens).filter(models.Tokens.owner_id == user_id).first()
         if token_exit:
             return
-        new_token = models.Tokens(token=token_info["access_token"], expires_at=token_info["expires_at"],
+        mew_token = models.Tokens(token=token_info["access_token"], expires_at=token_info["expires_at"],
                                   refresh_token=token_info["refresh_token"], owner_id=user_id)
         db.add(new_token)
         db.commit()
