@@ -43,6 +43,7 @@ class SongBase(BaseModel):
     preview_url: str
     external_url: str
     song_duration: str
+    uri: str
 
 
 class Song(SongBase):

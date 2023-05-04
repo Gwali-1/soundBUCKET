@@ -45,6 +45,7 @@ class Songs(Base):
     cover_art_url = Column(String)
     preview_url = Column(String)
     song_duration = Column(String)
+    song_uri = Column(String)
     external_url = Column(String)
     added_at = Column(DateTime, index=True, default=datetime.now)
     user_id = Column(Integer, ForeignKey("users.id"))
