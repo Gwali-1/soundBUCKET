@@ -17,7 +17,7 @@ def make_bucket(bucket:schema.BucketCreate, db:Session = Depends(get_sync_db_ses
     new_bucket = db_actions.create_bucket(db, bucket)
     if not new_bucket:
         raise HTTPException(status_code=400, detail="could not create bucket")
-    return new_bucket 
+    return new_bucket
 
 
 
@@ -43,6 +43,13 @@ def get_bucket_with_month(bucket_month:int, db:Session = Depends(get_sync_db_ses
 
 
 
+@router.get("/current_bucket", response_model=schema.Bucket)
+def get_current_bucket(db:Session = Depends(get_sync_db_session), _:int = Depends(get_query_token)):
+    bucket = db_actions.get_current_bucket(db)
+    if not bucket:
+        raise HTTPException(status_code=400, detail="Bucket not found")
+    return bucket
+
 
 
 @router.get("/all_buckets")
@@ -55,7 +62,7 @@ def get_buckets(db:Session = Depends(get_sync_db_session),_:int= Depends(get_que
 
 
 
-@router.patch("/close/{bucket_name}") 
+@router.patch("/close/{bucket_name}")
 def close_bucket(bucket_name:str, db:Session = Depends(get_sync_db_session), _:int = Depends(get_token_header)):
     closed = db_actions.close_bucket(db,bucket_name)
     if closed:

@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from sqlalchemy import  except_, extract,  select, update
+from sqlalchemy import  except_, extract,  select, update, desc
 from . import models , schema
 from sqlalchemy.orm import Session
 from .dependencies  import hashed_password, verify_password
@@ -119,6 +119,12 @@ def get_bucket_by_month(db:Session, bucket_month:int):
         return []
     return bucket
 
+
+def get_current_bucket(db:Session):
+    bucket = db.query(models.Bucket).order_by(desc(models.Bucket.id)).first()
+    if not bucket:
+        return []
+    return bucket
 
 
 def get_all_buckets(db:Session):

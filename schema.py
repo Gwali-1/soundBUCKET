@@ -43,7 +43,6 @@ class SongBase(BaseModel):
     preview_url: str
     external_url: str
     song_duration: str
-    uri: str
 
 
 class Song(SongBase):
@@ -55,7 +54,8 @@ class Song(SongBase):
 
 
 class SongCreate(SongBase):
-    bucket_id: int
+    bucket_id:int
+
 
 
 

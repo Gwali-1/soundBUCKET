@@ -53,22 +53,25 @@ def authorize_spotify():
 
 @router.post("/find_song")
 def find_song(track:str):
-    sp =  spotipy.Spotify(auth_manager=get_auth_object())
-    results = sp.search(q=track, type="track", limit=5)
-    response = []
-    for result in results["tracks"]["items"]:
-        track_info = {
+    try:
+        sp =  spotipy.Spotify(auth_manager=get_auth_object())
+        results= sp.search(q=track, type="track", limit=5)
+        response = []
+        for result in results["tracks"]["items"]:
+            track_info = {
                "title": result["name"],
                "song_id": result["uri"],
                "artist_name": result["artists"][0]["name"],
                "cover_art_url": result["album"]["images"][0]["url"],
                "preview_url": result["preview_url"],
                "song_duration":result["duration_ms"],
-    }
-        response.append(track_info)
-
-
-    return response
+               "external_url": result["external_urls"]["spotify"]
+                }
+            response.append(track_info)
+        return response
+    except Exception as e:
+        print(e)
+        return []
 
 
 
