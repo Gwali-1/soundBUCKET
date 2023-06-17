@@ -1,4 +1,3 @@
-from typing import List
 from pydantic import BaseModel, EmailStr, constr
 from datetime import datetime
 
@@ -110,6 +109,8 @@ class UserCreate(UserBase):
 class UserLogin(BaseModel):
     username: str
     password: str
+
+
 
 
 
