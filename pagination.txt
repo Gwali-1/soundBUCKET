@@ -1,0 +1,18 @@
+
+from fastapi import FastAPI, Query
+
+app = FastAPI()
+
+@app.get("/items")
+async def get_items(page: int = Query(1, ge=1), limit: int = Query(10, ge=1, le=50)):
+    # Perform database query to retrieve items based on pagination parameters
+    # Example: Retrieve items from the database based on the current page and limit
+
+    # Calculate the offset based on the page and limit
+    offset = (page - 1) * limit
+
+    # Perform the query using the offset and limit
+    items = await your_database_query(offset=offset, limit=limit)
+
+    # Return the items as a response
+    return {"items": items}
